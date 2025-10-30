@@ -21,11 +21,11 @@ struct AttendeeNode {
 struct EventNode {
     string eventID;
     string eventName;
-    string date; // Format: DD/MM/YYYY (for display)
+    string date; 
     string venue;
-    string sortableDate; // Format: YYYYMMDD (for sorting)
+    string sortableDate; 
     AttendeeNode* attendeeHead;
-    EventNode* next; // Pointer for hash table chaining
+    EventNode* next; 
 
     EventNode(string id, string name, string dt, string v, string sort_dt)
         : eventID(id), eventName(name), date(dt), venue(v), sortableDate(sort_dt), attendeeHead(nullptr), next(nullptr) {}
@@ -445,7 +445,7 @@ public:
         cout << "\nSuccess! " << studentName << " is registered for " << event->eventName << ".\n";
     }
 
-    // --- 1. MERGED: `manageEvent` now includes Update and Remove ---
+    // manageEvent` now includes Update and Remove ---
     void manageEvent() {
         string eventID;
         cout << "\n--- Manage/Remove Event ---\n";
@@ -552,7 +552,7 @@ public:
     }
 
 
-    // --- 2. MERGED: `searchForEvent` (Search by ID or Name) ---
+    // ---`searchForEvent` (Search by ID or Name) ---
     void searchForEvent() {
         cout << "\n--- Search for Event ---\n";
         cout << "  1. Search by Event ID (View details)\n";
@@ -566,7 +566,6 @@ public:
 
         switch (choice) {
             case 1: {
-                // This is the logic from your old `viewEventDetails` function
                 string eventID;
                 cout << "\n--- Search by Event ID ---\n";
                 cout << "Enter Event ID to view: ";
@@ -602,7 +601,6 @@ public:
                 break;
             }
             case 2:
-                // This calls your existing `searchEventByName` function
                 searchEventByName();
                 break;
             case 0:
@@ -614,7 +612,7 @@ public:
     }
 
 
-    // --- 3. MERGED: `viewAllEvents` (Sort by Name or Date) ---
+    // `viewAllEvents` (Sort by Name or Date) ---
     void viewAllEvents() {
         cout << "\n--- View All Events (Sorted) ---\n";
         cout << "  1. Sort by Event Name\n";
@@ -628,11 +626,9 @@ public:
 
         switch (choice) {
             case 1:
-                // This calls your existing `viewEventsSortedByName` function
                 viewEventsSortedByName();
                 break;
             case 2:
-                // This calls your existing `viewEventsSortedByDate` function
                 viewEventsSortedByDate();
                 break;
             case 0:
@@ -644,7 +640,6 @@ public:
     }
 
 
-    // --- (This function remains as it's called by the wrapper) ---
     void showStatistics() {
         cout << "\n--- System Statistics ---\n";
 
@@ -699,7 +694,6 @@ void printHeader() {
 )";
 }
 
-// --- 4. Main Menu updated to be shorter ---
 void printMenu() {
     cout << "\nMain Menu:\n";
     cout << "  1. Add New Event\n";
@@ -742,7 +736,6 @@ int main() {
         }
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear buffer
 
-        // --- 5. Main `switch` statement updated ---
         switch (choice) {
             case 1:
                 tracker.addEvent();
@@ -751,13 +744,13 @@ int main() {
                 tracker.registerForEvent();
                 break;
             case 3:
-                tracker.searchForEvent(); // <-- MERGED
+                tracker.searchForEvent(); 
                 break;
             case 4:
-                tracker.viewAllEvents(); // <-- MERGED
+                tracker.viewAllEvents(); 
                 break;
             case 5:
-                tracker.manageEvent(); // <-- MERGED
+                tracker.manageEvent(); 
                 break;
             case 6:
                 tracker.showStatistics();
@@ -773,8 +766,9 @@ int main() {
         }
 
         cout << "\nPress Enter to continue...";
-        cin.get(); // Wait for user to press Enter
+        cin.get(); 
     }
 
     return 0;
+
 }
