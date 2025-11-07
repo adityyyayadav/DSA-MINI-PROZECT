@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 // --- DATA STRUCTURE DEFINITIONS ---
@@ -117,6 +117,73 @@ private:
         // DD/MM/YYYY
         // 0123456789
         return dd_mm_yyyy.substr(6, 4) + dd_mm_yyyy.substr(3, 2) + dd_mm_yyyy.substr(0, 2);
+    }
+
+    bool isLeap(int year) {
+        return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
+    }
+
+    bool isValidDate(const string& date) {
+        if (date.length() != 10) return false;
+        if (date[2] != '/' || date[5] != '/') return false;
+
+        for (int i = 0; i < 10; ++i) {
+            if (i == 2 || i == 5) continue;
+            if (!isdigit(date[i])) return false;
+        }
+
+        int dd, mm, yyyy;
+        try {
+            dd = stoi(date.substr(0, 2));
+            mm = stoi(date.substr(3, 2));
+            yyyy = stoi(date.substr(6, 4));
+        } catch (...) {
+            return false;
+        }
+
+        if (yyyy < 1900 || yyyy > 2100) return false;
+        if (mm < 1 || mm > 12) return false;
+        if (dd < 1 || dd > 31) return false;
+
+        if (mm == 2) {
+            if (isLeap(yyyy)) return (dd <= 29);
+            else return (dd <= 28);
+        }
+
+        if (mm == 4 || mm == 6 || mm == 9 || mm == 11)
+            return (dd <= 30);
+
+        return true;
+    }
+
+    bool isValidName(const string& name) {
+        if (name.empty()) return false;
+        for (char c : name) {
+            if (!isalpha(c) && !isspace(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    bool isValidID(const string& id) {
+        if (id.empty()) return false;
+        for (char c : id) {
+            if (!isalnum(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    bool isValidVenue(const string& venue) {
+        if (venue.empty()) return false;
+        for (char c : venue) {
+            if (!isalpha(c) && !isspace(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -382,19 +449,37 @@ public:
         cin >> id;
         clearInputBuffer();
 
+        if (!isValidID(id)) {
+            cout << "Invalid ID format. Use only letters and numbers. Aborting.\n";
+            return;
+        }
+
         if (findEvent(id) != nullptr) {
             cout << "Error: Event ID '" << id << "' already exists!\n";
             return;
         }
 
-        cout << "Enter Event Name (e.g., 'CodeFest'): ";
-        getline(cin, name);
+        while(true) {
+            cout << "Enter Event Name (e.g., 'CodeFest'): ";
+            getline(cin, name);
+            if(isValidName(name)) break;
+            cout << "Invalid name. Use only letters and spaces.\n";
+        }
         
-        cout << "Enter Event Date (DD/MM/YYYY): ";
-        cin >> date;
-        clearInputBuffer();
-        cout << "Enter Event Venue: ";
-        getline(cin, venue);
+        while(true) {
+            cout << "Enter Event Date (DD/MM/YYYY): ";
+            cin >> date;
+            clearInputBuffer();
+            if(isValidDate(date)) break;
+            cout << "Invalid date format. Use DD/MM/YYYY.\n";
+        }
+
+        while(true) {
+            cout << "Enter Event Venue: ";
+            getline(cin, venue);
+            if(isValidVenue(venue)) break;
+            cout << "Invalid venue. Use only letters and spaces.\n";
+        }
 
         // Convert date to sortable format
         string sort_dt = toSortableDate(date);
@@ -430,11 +515,21 @@ public:
 
         string studentID, studentName;
         cout << "Found Event: " << event->eventName << "\n";
-        cout << "Enter your Student ID: ";
-        cin >> studentID;
-        clearInputBuffer();
-        cout << "Enter your Full Name: ";
-        getline(cin, studentName);
+        
+        while(true) {
+            cout << "Enter your Student ID: ";
+            cin >> studentID;
+            clearInputBuffer();
+            if(isValidID(studentID)) break;
+            cout << "Invalid ID. Use only letters and numbers.\n";
+        }
+
+        while(true) {
+            cout << "Enter your Full Name: ";
+            getline(cin, studentName);
+            if(isValidName(studentName)) break;
+            cout << "Invalid name. Use only letters and spaces.\n";
+        }
 
         AttendeeNode* newAttendee = new AttendeeNode(studentID, studentName);
 
@@ -486,17 +581,25 @@ public:
         switch (choice) {
             case 1: {
                 string newName;
-                cout << "Enter new Event Name: ";
-                getline(cin, newName);
+                while(true) {
+                    cout << "Enter new Event Name: ";
+                    getline(cin, newName);
+                    if(isValidName(newName)) break;
+                    cout << "Invalid name. Use only letters and spaces.\n";
+                }
                 event->eventName = newName;
                 cout << "Success! Event Name updated.\n";
                 break;
             }
             case 2: {
                 string newDate;
-                cout << "Enter new Event Date (DD/MM/YYYY): ";
-                cin >> newDate;
-                clearInputBuffer();
+                while(true) {
+                    cout << "Enter new Event Date (DD/MM/YYYY): ";
+                    cin >> newDate;
+                    clearInputBuffer();
+                    if(isValidDate(newDate)) break;
+                    cout << "Invalid date format. Use DD/MM/YYYY.\n";
+                }
                 event->date = newDate;
                 event->sortableDate = toSortableDate(newDate); // Don't forget to update this!
                 cout << "Success! Event Date updated.\n";
@@ -504,8 +607,12 @@ public:
             }
             case 3: {
                 string newVenue;
-                cout << "Enter new Event Venue: ";
-                getline(cin, newVenue);
+                while(true) {
+                    cout << "Enter new Event Venue: ";
+                    getline(cin, newVenue);
+                    if(isValidVenue(newVenue)) break;
+                    cout << "Invalid venue. Use only letters and spaces.\n";
+                }
                 event->venue = newVenue;
                 cout << "Success! Event Venue updated.\n";
                 break;
@@ -669,14 +776,14 @@ public:
             }
         }
 
-        cout << "Total Events in System:   " << totalEvents << "\n";
-        cout << "Total Registrations:      " << totalReg << "\n";
+        cout << "Total Events in System:    " << totalEvents << "\n";
+        cout << "Total Registrations:       " << totalReg << "\n";
         
         if (popularEvent != nullptr) {
-            cout << "Most Popular Event:       " << popularEvent->eventName 
+            cout << "Most Popular Event:        " << popularEvent->eventName 
                  << " (" << maxAttendees << " attendees)\n";
         } else {
-            cout << "Most Popular Event:       N/A (No events)\n";
+            cout << "Most Popular Event:        N/A (No events)\n";
         }
         cout << "----------------------------------------\n";
     }
@@ -688,7 +795,7 @@ void printHeader() {
     cout << R"(
 =========================================================
 
-          PICT Event Tracker & Management System
+         PICT Event Tracker & Management System
 
 =========================================================
 )";
